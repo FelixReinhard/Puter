@@ -11,7 +11,9 @@ import org.config.Config;
  */
 public class Registers {
 
-    static final byte PC = 1;
+    public static final byte PC = 1;
+    public static final byte HI = 15;
+    public static final byte LO = 14;
 
     /**
      * array of 32 registers of size 32bit

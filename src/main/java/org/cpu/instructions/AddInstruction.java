@@ -2,13 +2,10 @@ package org.cpu.instructions;
 
 import org.cpu.CPU;
 
-public class AddInstruction implements Instruction {
-    private final byte register1;
-    private final byte register2;
+public class AddInstruction extends BinaryInstruction {
 
     public AddInstruction(byte register1, byte register2) {
-        this.register1 = register1;
-        this.register2 = register2;
+        super(register1, register2);
     }
 
     @Override

@@ -29,4 +29,18 @@ public class ByteUtilsTest {
         Assert.assertEquals((byte)0xff, (byte)bytes[2]);
         Assert.assertEquals(-1, ByteUtils.getNumberFromArray(bytes, 0, 4));
     }
+
+    @Test
+    public void testMult() {
+        int a = Integer.MAX_VALUE;
+        int b = Integer.MAX_VALUE;
+        long res = Math.multiplyFull(a, b) + 44;
+
+        int high = (int) (res >>> 32);
+        int low = (int) (res & Integer.MAX_VALUE);
+
+        long new_res = ((long) high << 32) | low;
+
+        Assert.assertEquals(res, new_res);
+    }
 }

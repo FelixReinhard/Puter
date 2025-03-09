@@ -1,12 +1,9 @@
 package org.cpu;
 
 import org.cpu.instructions.Instruction;
-import org.cpu.instructions.InstructionsHelper;
+import org.cpu.instructions.helper.InstructionsHelper;
 import org.memory.Address;
-import org.memory.MainMemory;
 import org.memory.Memory;
-import org.transfer.Bus;
-import org.transfer.RecieverBus;
 
 /**
  * This class executes the instructions.
@@ -53,5 +50,9 @@ public class CPU {
 
     public Registers getRegisters() {
         return registers;
+    }
+
+    public Memory<Byte> getMainMemory() {
+        return mainMemory;
     }
 }
