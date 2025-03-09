@@ -1,5 +1,7 @@
 package org.cpu;
 
+import org.config.Config;
+
 /**
  * Represents the 32 registers of the CPU
  * Following register names and functions
@@ -18,10 +20,22 @@ public class Registers {
 
     public Registers() {
         this.registers = new int[32];
+        this.setRegister(PC, Config.START_PC_ADDRESS);
     }
 
     public int getProgramCounter() {
         return registers[PC];
+    }
+
+    public void incProgramCounter(int len) {
+        registers[PC]+= len;
+    }
+
+    public void setRegister(byte register, int value) {
+        registers[register] = value;
+    }
+    public int getRegister(byte register) {
+        return registers[register];
     }
 
 }

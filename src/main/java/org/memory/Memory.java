@@ -6,5 +6,5 @@ public interface Memory<T> {
     T[] getRangeAt(Address address, int len);
 
     void setAt(T value, Address address);
-    void setRangeAt(T[] value, Address address, int len);
+    void setRangeAt(T[] value, Address address);
 }
