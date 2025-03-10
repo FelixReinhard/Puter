@@ -3,9 +3,9 @@ package org.memory;
 /**
  * Represents a Ram Stick
  */
-public class MainMemory implements Memory<Byte> {
+public class MainMemory implements Memory<Integer> {
 
-    private final Byte[] bytes;
+    private final Integer[] words;
 
     /**
      * How big in KiB
@@ -13,37 +13,38 @@ public class MainMemory implements Memory<Byte> {
      * @param size
      */
     public MainMemory(int size) {
-        this.bytes = new Byte[1024 * size];
+        this.words = new Integer[1024 * size];
     }
 
     @Override
-    public Byte getAt(Address address) {
-        assert (address.getAddress() < bytes.length);
-        return bytes[address.getAddress()];
+    public Integer getAt(Address address) {
+        assert (address.getAddress() < words.length);
+        return words[address.getAddress()];
     }
 
     @Override
-    public Byte[] getRangeAt(Address address, int len) {
-        assert (address.getAddress() + len < bytes.length);
+    public Integer[] getRangeAt(Address address, int len) {
+        assert (address.getAddress() + len < words.length);
 
-        Byte[] ret = new Byte[len];
+        Integer[] ret = new Integer[len];
         for (int i = address.getAddress(); i < address.getAddress() + len; i++) {
-            ret[i - address.getAddress()] = bytes[i];
+            ret[i - address.getAddress()] = words[i];
         }
         return ret;
     }
 
     @Override
-    public void setAt(Byte value, Address address) {
-        assert (address.getAddress() < bytes.length);
-        bytes[address.getAddress()] = value;
+    public void setAt(Integer value, Address address) {
+        assert (address.getAddress() < words.length);
+        words[address.getAddress()] = value;
     }
 
     @Override
-    public void setRangeAt(Byte[] value, Address address) {
-        assert (address.getAddress() + value.length < bytes.length);
+    public void setRangeAt(Integer[] value, Address address) {
+        assert (address.getAddress() + value.length < words.length);
         for (int i = 0; i < value.length; i++) {
-            bytes[address.getAddress() + i] = value[i];
+            words[address.getAddress() + i] = value[i];
         }
     }
+
 }

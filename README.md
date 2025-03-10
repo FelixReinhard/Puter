@@ -3,25 +3,27 @@
 - `0x00`: Always zero
 - `0x01`: Program Counter `$pc`
 - 
+- `0x0d`: Jump Flag used when using compare.
 - `0x0e`: Low bits of multiplication result `$LO`
 - `0x0f`: High bits of multiplication result `$HI`
 ## Instruction Set
-We will be using something similar to MIPS.
-- `li $x {number}`: 5 byte long instruction to load an immediate to into a register.
+We will be using something similar to MIPS. For simplicity, we will fix the len of 
+a instruction to one word (32 bit).
+- `li $x {number}`: 4 byte long instruction to load an immediate to into a register.
   - `0x01`: 8 bits, optcode
   - `$x`: 4 bits, register
-  - `{number}`: 28 bits, immediate number. [0;268,435,456]
-- `lw $x {number}[$y] `4 byte long instruction to load from memory at $y into register $x with an offset. 4 byte value
+  - `{number}`: 20 bits, immediate number. 
+- `lw $x [$y + {number}] `4 byte long instruction to load from memory at $y into register $x with an offset. 4 byte value
   - `0x02`: 8 bits, optcode
   - `$x`: 4 bits, register
   - `$y`: 4 bits, register
   - `{number}`: 16 bits, immediate number. 
-- `lhw $x {number}[$y] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
+- `lhw $x [$y + {number}] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
   - `0x03`: 8 bits, optcode
   - `$x`: 4 bits, register
   - `$y`: 4 bits, register
   - `{number}`: 16 bits, immediate number.
-- `lb $x {number}[$y] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
+- `lb $x [$y + {number}] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
   - `0x04`: 8 bits, optcode
   - `$x`: 4 bits, register
   - `$y`: 4 bits, register
@@ -86,5 +88,21 @@ We will be using something similar to MIPS.
   - `0x61`: 8 bits
   - `$1`: 4 bits register
   - 4 bits padding
+### Branching:
+
+- `jmp {number}` Jump to absolute address
+  - `0x70` 8 bits 
+  - `{number}`: immediate 24 bits (3 bytes)
+- `jmp [$1 + {number}]` : Jump to address of register + offset
+  - `0x71`: optcode 8 bits 
+  - `$1`: 4 bit register
+  - `{number}`: 20 bit immediate
+### Conditional Branching
+- `cmp $1 $2`: Compare two registers. The result is saved in `$CP`
+  - `0x80`: 8bits
+  - `$1`: 4bits
+  - `$2`: 4bits
+
+
 ## Configs
 - The `$pc` starts at `0x00000400`

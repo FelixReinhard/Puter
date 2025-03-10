@@ -5,11 +5,16 @@ import org.utils.ByteUtils;
 
 public class InstructionsHelper {
 
-    public static Instruction fromBytes(Byte[] bytes) {
-        return switch (bytes[0]) {
-            case 0x01 -> new LIInstruction((byte) ((bytes[1] & 0b11110000) >>> 4), ByteUtils.getNumberFromArray(bytes, 1, 5) & 0x0fffffff);
+    public static Instruction from(Integer[] words, int amount) {
 
-            case 0x02 -> new LwInstruction();
+        byte[] bytes = ByteUtils.getArrayFromNumbers(words, amount);
+
+        return switch (bytes[0]) {
+            case 0x01 -> new LIInstruction((byte) ((bytes[1] & 0b11110000) >>> 4), ByteUtils.getNumberFromArray(bytes, 1, 4) & 0x0fffff);
+
+            case 0x02 -> new LwInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
+            case 0x03 -> new LhwInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
+            case 0x04 -> new LbInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
 
             case 0x50 -> new AddInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111));
             case 0x51 -> new SubInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111));
@@ -35,9 +40,7 @@ public class InstructionsHelper {
     }
 
     public static int getInstructionSize(byte optcode) {
-        if (optcode == 0x00 ) {
-            return 5;
-        } else if(optcode >= 0x01 && optcode <= 0x02) {
+        if(optcode >= 0x01 && optcode <= 0x04) {
             return 4;
         }
         else if (optcode >= 0x50 && optcode <= 0x5c) {

@@ -43,4 +43,17 @@ public class ByteUtilsTest {
 
         Assert.assertEquals(res, new_res);
     }
+
+    @Test
+    public void testGetArray() {
+        int x = ByteUtils.getNumberFromArray(new byte[]{0x12, 0x34, 0x56, 0x78}, 0, 4);
+        Assert.assertEquals(0x12345678, x);
+
+        byte[] b = ByteUtils.getArrayFromNumbers(new Integer[]{x, 0x11335577}, 8);
+        Assert.assertEquals(0x12, b[0]);
+        Assert.assertEquals(0x34, b[1]);
+        Assert.assertEquals(0x56, b[2]);
+        Assert.assertEquals(0x78, b[3]);
+
+    }
 }

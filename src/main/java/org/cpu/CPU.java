@@ -12,9 +12,9 @@ public class CPU {
 
     private final Registers registers;
 
-    private final Memory<Byte> mainMemory;
+    private final Memory<Integer> mainMemory;
 
-    public CPU(Memory<Byte> mainMemory) {
+    public CPU(Memory<Integer> mainMemory) {
         this.registers = new Registers();
         this.mainMemory = mainMemory;
     }
@@ -35,9 +35,10 @@ public class CPU {
      */
     Instruction getNextInstruction() {
         try {
-            byte optCode = mainMemory.getAt(new Address(registers.getProgramCounter()));
-            int len = InstructionsHelper.getInstructionSize(optCode);
-            Instruction ret = InstructionsHelper.fromBytes(mainMemory.getRangeAt(new Address(registers.getProgramCounter()), len));
+            byte optCode = (byte)((mainMemory.getAt(new Address(registers.getProgramCounter())) & 0xff000000) >>> 24);
+
+            int len = InstructionsHelper.getInstructionSize(optCode); // len is in bytes
+            Instruction ret = InstructionsHelper.from(mainMemory.getRangeAt(new Address(registers.getProgramCounter()), len / 4 + 1), len);
 
             registers.incProgramCounter(len);
             return ret;
@@ -52,7 +53,7 @@ public class CPU {
         return registers;
     }
 
-    public Memory<Byte> getMainMemory() {
+    public Memory<Integer> getMainMemory() {
         return mainMemory;
     }
 }
