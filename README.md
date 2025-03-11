@@ -2,13 +2,20 @@
 ## Registers - 16
 - `0x00`: Always zero
 - `0x01`: Program Counter `$pc`
+- `0x02` Return address `$ra`
+- `0x03`: Stack pointer `$sp` Points to the bottom of the stack
 - 
-- `0x0d`: Jump Flag used when using compare.
+- 
+- `0x0d`: Jump Flag (`$CP`) used when using compare `e1` and `e2`:
+  - `0`: EQ (`e1 = e2`)
+  - `1`: GREATER (`e1 > e2`)
+  - `2`: LESS (`e1 < e2`)
 - `0x0e`: Low bits of multiplication result `$LO`
 - `0x0f`: High bits of multiplication result `$HI`
 ## Instruction Set
 We will be using something similar to MIPS. For simplicity, we will fix the len of 
 a instruction to one word (32 bit).
+### Loading
 - `li $x {number}`: 4 byte long instruction to load an immediate to into a register.
   - `0x01`: 8 bits, optcode
   - `$x`: 4 bits, register
@@ -28,6 +35,25 @@ a instruction to one word (32 bit).
   - `$x`: 4 bits, register
   - `$y`: 4 bits, register
   - `{number}`: 16 bits, immediate number.
+### Saving
+- `sw $x [$y + {number}] `4 byte long instruction to save from value at $x into address $y + offset.
+  - `0x05`: 8 bits, optcode
+  - `$x`: 4 bits, register
+  - `$y`: 4 bits, register
+  - `{number}`: 16 bits, immediate number.
+  - 
+- `shw $x [$y + {number}] `4 byte long instruction to save from value at $x into address $y + offset.
+  - `0x06`: 8 bits, optcode
+  - `$x`: 4 bits, register
+  - `$y`: 4 bits, register
+  - `{number}`: 16 bits, immediate number.
+- `sb $x [$y + {number}] `4 byte long instruction to save from value at $x into address $y + offset.
+  - `0x07`: 8 bits, optcode
+  - `$x`: 4 bits, register
+  - `$y`: 4 bits, register
+  - `{number}`: 16 bits, immediate number.
+
+### Arithmetic 
 - `add $1 $2`: 2 byte Adds `$1 = $1 + $2`
   - `0x50`: 8 bits optcode
   - `$1`: 4 bits register
@@ -97,12 +123,33 @@ a instruction to one word (32 bit).
   - `0x71`: optcode 8 bits 
   - `$1`: 4 bit register
   - `{number}`: 20 bit immediate
+
+- `jeq [$1 + {number}]` : Jump to address of register + offset iff `$CP = 0`
+  - `0x72`: optcode 8 bits
+  - `$1`: 4 bit register
+  - `{number}`: 20 bit immediate
+- `jnq [$1 + {number}]` : Jump to address of register + offset iff `$CP != 0`
+  - `0x73`: optcode 8 bits
+  - `$1`: 4 bit register
+  - `{number}`: 20 bit immediate
+- `jls [$1 + {number}]` : Jump to address of register + offset iff `$CP = 2`
+  - `0x74`: optcode 8 bits
+  - `$1`: 4 bit register
+  - `{number}`: 20 bit immediate
+- `jge [$1 + {number}]` : Jump to address of register + offset iff `$CP = 1`
+  - `0x75`: optcode 8 bits
+  - `$1`: 4 bit register
+  - `{number}`: 20 bit immediate
+
 ### Conditional Branching
 - `cmp $1 $2`: Compare two registers. The result is saved in `$CP`
-  - `0x80`: 8bits
+  - `0x11`: 8bits
   - `$1`: 4bits
   - `$2`: 4bits
 
-
+### System
+- `syscall`: Go to the prepared syscall handler
+  - `0x12`: 8bits
 ## Configs
 - The `$pc` starts at `0x00000400`
+- 

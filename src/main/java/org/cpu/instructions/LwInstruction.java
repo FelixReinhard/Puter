@@ -19,7 +19,7 @@ public class LwInstruction implements Instruction {
     @Override
     public void execute(CPU cpu) {
         int address = cpu.getRegisters().getRegister(addressRegister);
-        int value = cpu.getMainMemory().getAt(new Address(address));
+        int value = cpu.getMainMemory().getAt(new Address(address + offset));
         cpu.getRegisters().setRegister(destRegister, value);
     }
 }

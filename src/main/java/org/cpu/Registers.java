@@ -14,6 +14,7 @@ public class Registers {
     public static final byte PC = 1;
     public static final byte HI = 15;
     public static final byte LO = 14;
+    public static final byte CP = 13;
 
     /**
      * array of 32 registers of size 32bit
@@ -27,6 +28,10 @@ public class Registers {
 
     public int getProgramCounter() {
         return registers[PC];
+    }
+
+    public void setProgramCounter(int address) {
+        this.registers[PC] = address;
     }
 
     public void incProgramCounter(int len) {
