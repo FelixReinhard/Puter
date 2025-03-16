@@ -3,13 +3,13 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 import org.memory.Address;
 
-public class SwInstruction implements Instruction {
+public class ShwInstruction implements Instruction {
 
     private final byte valueRegister;
     private final byte addressRegister;
     private final short offset;
 
-    public SwInstruction(byte valueRegister, byte addressRegister, short offset) {
+    public ShwInstruction(byte valueRegister, byte addressRegister, short offset) {
         this.valueRegister = valueRegister;
         this.addressRegister = addressRegister;
         this.offset = offset;
@@ -18,7 +18,9 @@ public class SwInstruction implements Instruction {
     @Override
     public void execute(CPU cpu) {
         int value = cpu.getRegisters().getRegister(valueRegister);
-        cpu.getMainMemory().setAt(value, new Address(addressRegister + offset));
+        int oldValue = cpu.getMainMemory().getAt(new Address(addressRegister + offset));
+
+        cpu.getMainMemory().setAt((oldValue & 0xffff0000) | (value & 0x0000ffff), new Address(addressRegister + offset));
     }
 
     @Override

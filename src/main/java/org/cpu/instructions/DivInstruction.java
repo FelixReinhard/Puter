@@ -6,7 +6,7 @@ import org.cpu.Registers;
 public class DivInstruction extends BinaryInstruction {
 
     public DivInstruction(byte register1, byte register2) {
-        super(register1, register2);
+        super(register1, register2, 0x55000000);
     }
 
     @Override
@@ -19,5 +19,10 @@ public class DivInstruction extends BinaryInstruction {
 
         cpu.getRegisters().setRegister(Registers.HI, div);
         cpu.getRegisters().setRegister(Registers.LO, mod);
+    }
+
+    @Override
+    public int getInstruction() {
+        return 0;
     }
 }

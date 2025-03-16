@@ -6,7 +6,7 @@ import org.cpu.Registers;
 public class MultInstruction extends BinaryInstruction {
 
     public MultInstruction(byte register1, byte register2) {
-        super(register1, register2);
+        super(register1, register2, 0x54000000);
     }
 
     @Override

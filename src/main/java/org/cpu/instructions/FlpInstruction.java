@@ -14,4 +14,9 @@ public class FlpInstruction implements Instruction {
         int v = cpu.getRegisters().getRegister(register);
         cpu.getRegisters().setRegister(register, ~v);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

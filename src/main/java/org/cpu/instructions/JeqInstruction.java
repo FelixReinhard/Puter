@@ -20,4 +20,9 @@ public class JeqInstruction implements Instruction{
             cpu.getRegisters().setProgramCounter(v + offset);
         }
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

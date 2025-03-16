@@ -5,7 +5,7 @@ import org.cpu.CPU;
 public class SwitchInstruction extends BinaryInstruction {
 
     public SwitchInstruction(byte register1, byte register2) {
-        super(register1, register2);
+        super(register1, register2, 0x53000000);
     }
 
     @Override

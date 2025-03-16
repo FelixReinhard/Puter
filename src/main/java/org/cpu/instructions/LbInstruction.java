@@ -23,4 +23,9 @@ public class LbInstruction implements Instruction {
         int value = cpu.getMainMemory().getAt(new Address(address + offset)) | 0x000000ff;
         cpu.getRegisters().setRegister(destRegister, value);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

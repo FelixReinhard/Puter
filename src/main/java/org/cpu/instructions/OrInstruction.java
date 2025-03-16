@@ -5,7 +5,7 @@ import org.cpu.CPU;
 public class OrInstruction extends BinaryInstruction {
 
     public OrInstruction(byte register1, byte register2) {
-        super(register1, register2);
+        super(register1, register2, 0x57000000);
     }
 
     @Override
@@ -15,5 +15,10 @@ public class OrInstruction extends BinaryInstruction {
 
         cpu.getRegisters().setRegister(register1, v1 | v2);
 
+    }
+
+    @Override
+    public int getInstruction() {
+        return 0;
     }
 }

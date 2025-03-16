@@ -14,4 +14,9 @@ public class NotInstruction implements Instruction {
         int v = cpu.getRegisters().getRegister(register);
         cpu.getRegisters().setRegister(register, (v > 0) ? 1 : 0);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

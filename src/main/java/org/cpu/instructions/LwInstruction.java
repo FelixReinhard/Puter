@@ -22,4 +22,9 @@ public class LwInstruction implements Instruction {
         int value = cpu.getMainMemory().getAt(new Address(address + offset));
         cpu.getRegisters().setRegister(destRegister, value);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

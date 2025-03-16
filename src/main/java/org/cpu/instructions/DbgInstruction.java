@@ -13,4 +13,9 @@ public class DbgInstruction implements Instruction {
     public void execute(CPU cpu) {
         System.out.println(cpu.getRegisters().getRegister(register));
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

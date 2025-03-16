@@ -5,7 +5,7 @@ import org.cpu.CPU;
 public class SubInstruction extends BinaryInstruction {
 
     public SubInstruction(byte register1, byte register2) {
-        super(register1, register2);
+        super(register1, register2, 0x51000000);
     }
 
     @Override

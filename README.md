@@ -4,6 +4,7 @@
 - `0x01`: Program Counter `$pc`
 - `0x02` Return address `$ra`
 - `0x03`: Stack pointer `$sp` Points to the bottom of the stack
+- `0x04`: Base pointer `$bp` Points to beginning of the program code 
 - 
 - 
 - `0x0d`: Jump Flag (`$CP`) used when using compare `e1` and `e2`:

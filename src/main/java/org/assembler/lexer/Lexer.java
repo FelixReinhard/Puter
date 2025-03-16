@@ -1,5 +1,6 @@
 package org.assembler.lexer;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -35,16 +36,32 @@ public class Lexer {
             c = nc.get();
 
             switch (c) {
+                case ' ':
+                    currentPos++;
+                    break;
                 case '\n':
                 case '\t':
                     currentLine++;
                     currentPos = 0;
                     break;
                 case '$':
-                    register();
+                    addToken(currentLine, currentPos, register());
+                    //tokens.add(register());
                     break;
-                case ':':
-                    label();
+                case '#':
+                    addToken(currentLine, currentPos, label());
+                    break;
+                case '[':
+                    addToken(currentLine, currentPos, address());
+                    break;
+                case '=':
+                    addToken(currentLine, currentPos, new EqualsToken());
+                    break;
+                case '{':
+                    addToken(currentLine, currentPos, literal());
+                    break;
+                default:
+                    addToken(currentLine, currentPos, word(c));
                     break;
             }
         }
@@ -57,17 +74,128 @@ public class Lexer {
     }
 
 
+    private Token word(char c) {
+        // Also handles numbers
+        if (Character.isDigit(c)) {
+            current--;
+            int num = parseNumber();
+            return new NumberToken(num);
+        } else {
+            String s = c + getUntilSpace();
+            return new WordToken(s);
+        }
+    }
 
-    private void register() {
+    private LiteralToken literal() {
+        consumeSpaces();
+        Optional<Character> peeked = peek();
+        if (peeked.isEmpty()) {
+            reportError("Literal must be non empty.");
+            return null;
+        }
+
+        // Empty literal
+        if (peeked.get() == '}')
+            return new LiteralToken(new Integer[]{});
+
+        List<Integer> words = new ArrayList<>();
+
+        while (true) {
+            int nextNumber = parseNumber();
+            if (hasError) return null;
+            words.add(nextNumber);
+
+            consumeSpaces();
+
+            Optional<Character> peeked2 = peek();
+            if (peeked2.isEmpty()) {
+                reportError("Literal must be closed.");
+                return null;
+            }
+
+            if (peeked2.get() == '}') {
+                next();
+                Integer[] w = new Integer[words.size()];
+                words.toArray(w);
+                return new LiteralToken(w);
+            }
+            consume(',');
+            consumeSpaces();
+        }
+
+    }
+
+    private Token address() {
+        /*
+        - [number]
+        - [$register]
+        - [$register + number]
+        - [.label + number]
+        - [.label]
+         */
+
+        Optional<Character> peeked = peek();
+        if (peeked.isEmpty()) {
+            reportError("Address must be non empty.");
+            return null;
+        }
+
+        byte register = 0;
+        boolean hasRegister = false;
+
+        boolean hasLabel = false;
+        String label = "";
+
+        if (peeked.get() == '$') {
+            consume('$');
+            register = register().getRegister();
+            consumeSpaces();
+
+            hasRegister = true;
+        } else if(peeked.get() == '.') {
+            consume('.');
+            label = getUntilSpace();
+            hasLabel = true;
+        }
+
+        int offset = 0;
+        peeked = peek();
+        if (peeked.isEmpty()) {
+            reportError("Address must closed with ].");
+            return null;
+        }
+
+        if (peeked.get() == '+') {
+            consume('+');
+            consumeSpaces();
+            // We have a digit.
+            offset = parseNumber();
+            consumeSpaces();
+        } else if (Character.isDigit(peeked.get()) && !hasRegister && !hasLabel) {
+            // Only if both the first char is a digit and there was not register so
+            // Something like this [0x001]
+            offset = parseNumber();
+        }
+
+        consume(']');
+        if (hasLabel)
+            return new LabelAddressToken(label, offset);
+        else
+            return new AddressToken(register, offset);
+
+
+    }
+
+    private RegisterToken register() {
 
         /*
-
+            A register beginning with $ then a number or one of the fixed strings ended by space or \n
          */
 
 
         if (peek().isEmpty()) {
             reportError("Register construct must be $ followed by a number.");
-            return;
+            return null;
         }
 
         String c = getUntilSpace();
@@ -78,26 +206,80 @@ public class Lexer {
         } catch (NumberFormatException ignored) {
             // Is a named one
             c = c.toLowerCase(Locale.ROOT);
-            switch (c) {
-                case "pc":
-                    break;
-            }
+            n = switch (c) {
+                case "pc" -> 1;
+                case "ra" -> 2;
+                case "sp" -> 3;
+                case "cp" -> 13;
+                case "lo" -> 14;
+                case "hi" -> 15;
+                default -> n;
+            };
         }
 
         if (n < 0 || n > 16) {
             reportError("When using");
         }
 
-        tokens.add(new RegisterToken(n));
+        return new RegisterToken(n);
     }
-    private void label() {
-
+    private LabelToken label() {
+        return new LabelToken(getUntilSpace());
     }
 
     /*
     Helper methods
 
      */
+
+    private void addToken(int line, int pos, Token tk) {
+        tk.setPositionInformation(line, pos);
+        tokens.add(tk);
+    }
+
+    private int parseNumber() {
+        String s = getNumbers();
+        if (s.length() < 3) {
+            // Must be a normal number as
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException ignored) {
+                reportError(String.format("Couldn't parse number %s", s));
+                return 0;
+            }
+        } else if (s.charAt(0) == '0' && s.charAt(1) == 'x') {
+            // Hexadecimal
+            StringBuilder sb = new StringBuilder(s);
+            sb.deleteCharAt(0);
+            sb.deleteCharAt(0);
+
+            try {
+                return Integer.parseInt(sb.toString(), 16);
+            } catch (NumberFormatException ignored) {
+                reportError(String.format("Couldn't parse number %s", s));
+                return 0;
+            }
+        } else if (s.charAt(0) == '0' && s.charAt(1) == 'b') {
+            // Hexadecimal
+            StringBuilder sb = new StringBuilder(s);
+            sb.deleteCharAt(0);
+            sb.deleteCharAt(0);
+
+            try {
+                return Integer.parseInt(sb.toString(), 2);
+            } catch (NumberFormatException ignored) {
+                reportError(String.format("Couldn't parse number %s", s));
+                return 0;
+            }
+        } else {
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException ignored) {
+                reportError(String.format("Couldn't parse number %s", s));
+                return 0;
+            }
+        }
+    }
 
     private void reportError(String message) {
         hasError = true;
@@ -133,7 +315,7 @@ public class Lexer {
 
         while (true) {
             Optional<Character> o = peek();
-            if (o.isEmpty() || o.get() == ' ') {
+            if (o.isEmpty() || o.get() == ' ' || o.get() == ']') {
                 return ret.toString();
             } else if (o.get() == '\n') {
                 currentLine++;
@@ -144,6 +326,43 @@ public class Lexer {
                  ret.append(next().get());
             }
         }
+
+    }
+
+    /**
+     * Get the next characters in a string until a space or newline is found
+     * @return
+     */
+    private String getNumbers() {
+        StringBuilder ret = new StringBuilder();
+
+        while (true) {
+            Optional<Character> o = peek();
+            if (o.isEmpty() || (!Character.isDigit(o.get()) && o.get() != 'x' && o.get() != 'b')) {
+                return ret.toString();
+            } else if (o.get() == '\n') {
+                currentLine++;
+                currentPos = 0;
+                return ret.toString();
+            }
+            else {
+                ret.append(next().get());
+            }
+        }
+
+    }
+
+    private void consume(char c) {
+        Optional<Character> o = peek();
+        if (o.isEmpty()) {
+            reportError(String.format("Expected %c, but nothing was found", c));
+            return;
+        }
+        if (o.get() != c) {
+            reportError(String.format("Expected %c, but got %c", c, o.get()));
+            return;
+        }
+        next();
 
     }
 

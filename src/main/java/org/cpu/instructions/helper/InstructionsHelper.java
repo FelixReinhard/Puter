@@ -16,6 +16,8 @@ public class InstructionsHelper {
             case 0x03 -> new LhwInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
             case 0x04 -> new LbInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
             case 0x05 -> new SwInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
+            case 0x06 -> new ShwInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
+            case 0x07 -> new SbInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111), (short)ByteUtils.getNumberFromArray(bytes, 2, 4));
 
             case 0x50 -> new AddInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111));
             case 0x51 -> new SubInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111));

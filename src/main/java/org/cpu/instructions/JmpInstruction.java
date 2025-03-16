@@ -17,4 +17,9 @@ public class JmpInstruction implements Instruction {
         int v = cpu.getRegisters().getRegister(register);
         cpu.getRegisters().setProgramCounter(v + address);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

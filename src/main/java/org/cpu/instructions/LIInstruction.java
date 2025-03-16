@@ -16,4 +16,9 @@ public class LIInstruction implements Instruction {
     public void execute(CPU cpu) {
         cpu.getRegisters().setRegister(register, number);
     }
+
+    @Override
+    public int getInstruction() {
+        return 0;
+    }
 }

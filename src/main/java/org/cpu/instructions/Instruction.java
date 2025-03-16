@@ -19,4 +19,10 @@ public interface Instruction {
      */
     void execute(CPU cpu);
 
+    /**
+     * Transform the instruction into the 32 bit word.
+     * @return
+     */
+    int getInstruction();
+
 }
