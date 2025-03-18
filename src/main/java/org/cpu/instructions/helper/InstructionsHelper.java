@@ -46,6 +46,8 @@ public class InstructionsHelper {
 
             case 0x10 -> new DbgInstruction((byte)(bytes[1] & 0xf0));
 
+            case 0x11 -> new CmpInstruction((byte) ((bytes[1] & 0b11110000) >>> 4),  (byte) (bytes[1] & 0b00001111));
+
             default -> null;
         };
 

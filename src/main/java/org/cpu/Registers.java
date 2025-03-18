@@ -16,6 +16,8 @@ public class Registers {
     public static final byte LO = 14;
     public static final byte CP = 13;
 
+    public static final int SYS_ADDRESS = 0x00000100;
+
     /**
      * array of 32 registers of size 32bit
      */

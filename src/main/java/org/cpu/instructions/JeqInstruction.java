@@ -3,14 +3,10 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 import org.cpu.Registers;
 
-public class JeqInstruction implements Instruction{
+public class JeqInstruction extends JmpInstruction {
 
-    private final byte register;
-    private final int offset;
-
-    public JeqInstruction(byte register, int offset) {
-        this.register = register;
-        this.offset = offset;
+    public JeqInstruction(byte register, int address) {
+        super(register, address);
     }
 
     @Override

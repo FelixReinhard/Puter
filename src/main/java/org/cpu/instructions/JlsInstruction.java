@@ -3,14 +3,10 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 import org.cpu.Registers;
 
-public class JlsInstruction implements Instruction {
-
-    private final byte register;
-    private final int offset;
+public class JlsInstruction extends JmpInstruction {
 
     public JlsInstruction(byte register, int offset) {
-        this.register = register;
-        this.offset = offset;
+        super(register, offset);
     }
 
     @Override

@@ -117,9 +117,11 @@ a instruction to one word (32 bit).
   - 4 bits padding
 ### Branching:
 
-- `jmp {number}` Jump to absolute address
-  - `0x70` 8 bits 
-  - `{number}`: immediate 24 bits (3 bytes)
+[//]: # (- `jmp {number}` Jump to absolute address)
+
+[//]: # (  - `0x70` 8 bits )
+
+[//]: # (  - `{number}`: immediate 24 bits &#40;3 bytes&#41;)
 - `jmp [$1 + {number}]` : Jump to address of register + offset
   - `0x71`: optcode 8 bits 
   - `$1`: 4 bit register
@@ -129,7 +131,7 @@ a instruction to one word (32 bit).
   - `0x72`: optcode 8 bits
   - `$1`: 4 bit register
   - `{number}`: 20 bit immediate
-- `jnq [$1 + {number}]` : Jump to address of register + offset iff `$CP != 0`
+- `jne [$1 + {number}]` : Jump to address of register + offset iff `$CP != 0`
   - `0x73`: optcode 8 bits
   - `$1`: 4 bit register
   - `{number}`: 20 bit immediate

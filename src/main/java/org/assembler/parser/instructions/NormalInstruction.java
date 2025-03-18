@@ -12,4 +12,8 @@ public class NormalInstruction extends AssemblyInstruction {
         this.instruction = instruction;
     }
 
+    @Override
+    public Optional<Instruction> getInstruction() {
+        return Optional.ofNullable(instruction);
+    }
 }

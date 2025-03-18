@@ -3,14 +3,10 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 import org.cpu.Registers;
 
-public class JneInstruction implements Instruction {
-
-    private final byte register;
-    private final int offset;
+public class JneInstruction extends JmpInstruction {
 
     public JneInstruction(byte register, int offset) {
-        this.register = register;
-        this.offset = offset;
+        super(register, offset);
     }
 
     @Override

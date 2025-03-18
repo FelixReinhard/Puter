@@ -382,4 +382,12 @@ public class Lexer {
             }
         }
     }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public boolean isHasError() {
+        return hasError;
+    }
 }

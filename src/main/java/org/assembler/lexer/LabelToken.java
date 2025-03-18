@@ -7,4 +7,8 @@ public class LabelToken extends Token {
         super(TokenType.LABEL);
         this.labelName = labelName;
     }
+
+    public String getLabelName() {
+        return labelName;
+    }
 }
