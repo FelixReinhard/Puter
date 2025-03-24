@@ -16,10 +16,10 @@ public class LexerTests {
 
     @Test
     public void test2Register() {
-        Lexer l = new Lexer("$3\n$pc $ra $sp $cp $lo $HI");
+        Lexer l = new Lexer("$3\n$pc $ra $sp $cp $lo $HI $bp");
 
         var res = l.getTokens();
-        Assert.assertEquals(7, res.size());
+        Assert.assertEquals(8, res.size());
         Assert.assertTrue(res.get(0) instanceof RegisterToken);
         Assert.assertTrue(res.get(1) instanceof RegisterToken);
     }

@@ -7,6 +7,7 @@ public class JgeInstruction extends JmpInstruction {
 
     public JgeInstruction(byte register, int offset) {
         super(register, offset);
+        setOptcode(0x75);
     }
 
     @Override
@@ -17,8 +18,5 @@ public class JgeInstruction extends JmpInstruction {
         }
     }
 
-    @Override
-    public int getInstruction() {
-        return 0;
-    }
+
 }

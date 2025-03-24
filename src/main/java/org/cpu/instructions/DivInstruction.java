@@ -20,9 +20,4 @@ public class DivInstruction extends BinaryInstruction {
         cpu.getRegisters().setRegister(Registers.HI, div);
         cpu.getRegisters().setRegister(Registers.LO, mod);
     }
-
-    @Override
-    public int getInstruction() {
-        return 0;
-    }
 }

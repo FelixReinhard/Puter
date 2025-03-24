@@ -25,6 +25,6 @@ public class ShwInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x06 << 24) | (valueRegister << 20) | (addressRegister << 16) | (0xffff & offset);
     }
 }

@@ -11,6 +11,6 @@ public class SyscallInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return 0x12 << 24;
     }
 }

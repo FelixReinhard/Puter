@@ -6,6 +6,7 @@ public class JmpInstruction implements Instruction {
 
     protected final int offset;
     protected final byte register;
+    private int optcode = 0x71;
 
     public JmpInstruction(byte register, int offset) {
         this.offset = offset;
@@ -20,6 +21,10 @@ public class JmpInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (optcode << 24) | (register << 20) | (offset & 0xfffff);
+    }
+
+    protected void setOptcode(int optcode) {
+        this.optcode = optcode;
     }
 }

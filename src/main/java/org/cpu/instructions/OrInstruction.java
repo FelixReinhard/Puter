@@ -16,9 +16,4 @@ public class OrInstruction extends BinaryInstruction {
         cpu.getRegisters().setRegister(register1, v1 | v2);
 
     }
-
-    @Override
-    public int getInstruction() {
-        return 0;
-    }
 }

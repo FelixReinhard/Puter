@@ -3,7 +3,7 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 
 public class FlpInstruction implements Instruction {
-    private byte register;
+    private final byte register;
 
     public FlpInstruction(byte register) {
         this.register = register;
@@ -17,6 +17,6 @@ public class FlpInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x60 << 24) | (register << 20);
     }
 }

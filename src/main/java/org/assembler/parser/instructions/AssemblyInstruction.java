@@ -12,7 +12,7 @@ public class AssemblyInstruction {
         this.firstToken = tk;
     }
 
-    public Optional<Instruction> getInstruction() {
-        return Optional.empty();
+    public Instruction getInstruction() {
+        return null;
     }
 }

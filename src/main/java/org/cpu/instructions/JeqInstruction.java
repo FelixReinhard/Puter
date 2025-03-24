@@ -5,8 +5,9 @@ import org.cpu.Registers;
 
 public class JeqInstruction extends JmpInstruction {
 
-    public JeqInstruction(byte register, int address) {
-        super(register, address);
+    public JeqInstruction(byte register, int offset) {
+        super(register, offset);
+        setOptcode(0x72);
     }
 
     @Override
@@ -15,10 +16,5 @@ public class JeqInstruction extends JmpInstruction {
             int v = cpu.getRegisters().getRegister(register);
             cpu.getRegisters().setProgramCounter(v + offset);
         }
-    }
-
-    @Override
-    public int getInstruction() {
-        return 0;
     }
 }

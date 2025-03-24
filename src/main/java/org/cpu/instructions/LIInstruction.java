@@ -19,6 +19,6 @@ public class LIInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x01 << 24) | (register << 20) | (number & 0xfffff);
     }
 }

@@ -36,7 +36,7 @@ public class ByteUtils {
         assert (startIndex >= 0 && endIndex <= bytes.length);
 
         for (int i = startIndex; i < endIndex; i++) {
-            res = (res << 8) | bytes[i];
+            res = (res << 8) | (0xff & bytes[i]);
         }
         return res;
     }

@@ -7,6 +7,7 @@ public class JlsInstruction extends JmpInstruction {
 
     public JlsInstruction(byte register, int offset) {
         super(register, offset);
+        setOptcode(0x74);
     }
 
     @Override
@@ -17,8 +18,4 @@ public class JlsInstruction extends JmpInstruction {
         }
     }
 
-    @Override
-    public int getInstruction() {
-        return 0;
-    }
 }

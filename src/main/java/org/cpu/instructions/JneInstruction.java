@@ -7,6 +7,7 @@ public class JneInstruction extends JmpInstruction {
 
     public JneInstruction(byte register, int offset) {
         super(register, offset);
+        setOptcode(0x73);
     }
 
     @Override
@@ -15,10 +16,5 @@ public class JneInstruction extends JmpInstruction {
             int v = cpu.getRegisters().getRegister(register);
             cpu.getRegisters().setProgramCounter(v + offset);
         }
-    }
-
-    @Override
-    public int getInstruction() {
-        return 0;
     }
 }

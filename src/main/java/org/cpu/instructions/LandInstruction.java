@@ -14,9 +14,4 @@ public class LandInstruction extends BinaryInstruction {
 
         cpu.getRegisters().setRegister(register1, ((v1 > 0) && (v2 > 0)) ? 1 : 0);
     }
-
-    @Override
-    public int getInstruction() {
-        return 0;
-    }
 }

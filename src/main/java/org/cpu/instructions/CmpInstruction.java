@@ -6,7 +6,7 @@ import org.cpu.Registers;
 public class CmpInstruction extends BinaryInstruction {
 
     public CmpInstruction(byte register1, byte register2) {
-        super(register1, register2, 0x11);
+        super(register1, register2, 0x11000000);
     }
 
     @Override

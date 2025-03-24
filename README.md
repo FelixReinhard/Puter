@@ -5,7 +5,11 @@
 - `0x02` Return address `$ra`
 - `0x03`: Stack pointer `$sp` Points to the bottom of the stack
 - `0x04`: Base pointer `$bp` Points to beginning of the program code 
-- 
+- `0x05`: `$a` First general purpose register
+- `0x06`: `$b` Second general purpose register
+- `0x07`: `$c` Third general purpose register
+- `0x08`: `$d` Forth general purpose register
+- `0x09`: `$e` Fifth general purpose register
 - 
 - `0x0d`: Jump Flag (`$CP`) used when using compare `e1` and `e2`:
   - `0`: EQ (`e1 = e2`)
@@ -33,6 +37,11 @@ a instruction to one word (32 bit).
   - `{number}`: 16 bits, immediate number.
 - `lb $x [$y + {number}] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
   - `0x04`: 8 bits, optcode
+  - `$x`: 4 bits, register
+  - `$y`: 4 bits, register
+  - `{number}`: 16 bits, immediate number.
+- `la $x [$y + {number}] `4 byte long instruction to load from memory at $y into register $x with an offset. 2 byte value
+  - `0x05`: 8 bits, optcode
   - `$x`: 4 bits, register
   - `$y`: 4 bits, register
   - `{number}`: 16 bits, immediate number.

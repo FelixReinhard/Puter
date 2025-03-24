@@ -1,8 +1,10 @@
 package org.cpu;
 
+import org.config.Config;
 import org.cpu.instructions.Instruction;
 import org.cpu.instructions.helper.InstructionsHelper;
 import org.memory.Address;
+import org.memory.MainMemory;
 import org.memory.Memory;
 
 /**
@@ -17,6 +19,13 @@ public class CPU {
     public CPU(Memory<Integer> mainMemory) {
         this.registers = new Registers();
         this.mainMemory = mainMemory;
+        this.registers.setRegister(Registers.BP, Config.START_PC_ADDRESS);
+    }
+
+    public static CPU flashWith(Integer[] values) {
+        MainMemory memory = new MainMemory(2);
+        memory.setRangeAt(values, new Address(Config.START_PC_ADDRESS));
+        return new CPU(memory);
     }
 
     /**
@@ -40,7 +49,7 @@ public class CPU {
             int len = InstructionsHelper.getInstructionSize(optCode); // len is in bytes
             Instruction ret = InstructionsHelper.from(mainMemory.getRangeAt(new Address(registers.getProgramCounter()), len / 4 + 1), len);
 
-            registers.incProgramCounter(len);
+            registers.incProgramCounter();
             return ret;
         } catch (NullPointerException e) {
             // Return null if we dont find a value there

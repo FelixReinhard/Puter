@@ -25,6 +25,6 @@ public class LhwInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x03 << 24) | (destRegister << 20) | (addressRegister << 16) | (0xffff & offset);
     }
 }

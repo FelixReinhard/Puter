@@ -40,6 +40,7 @@ public class Lexer {
                     currentPos++;
                     break;
                 case '\n':
+                case '\r':
                 case '\t':
                     currentLine++;
                     currentPos = 0;
@@ -69,7 +70,6 @@ public class Lexer {
         if (hasError) {
             System.out.println(errorMessage);
         }
-
         return tokens;
     }
 
@@ -157,6 +157,7 @@ public class Lexer {
             label = getUntilSpace();
             hasLabel = true;
         }
+        consumeSpaces();
 
         int offset = 0;
         peeked = peek();
@@ -210,6 +211,12 @@ public class Lexer {
                 case "pc" -> 1;
                 case "ra" -> 2;
                 case "sp" -> 3;
+                case "bp" -> 4;
+                case "a" -> 5;
+                case "b" -> 6;
+                case "c" -> 7;
+                case "d" -> 8;
+                case "e" -> 9;
                 case "cp" -> 13;
                 case "lo" -> 14;
                 case "hi" -> 15;
@@ -317,7 +324,7 @@ public class Lexer {
             Optional<Character> o = peek();
             if (o.isEmpty() || o.get() == ' ' || o.get() == ']') {
                 return ret.toString();
-            } else if (o.get() == '\n') {
+            } else if (o.get() == '\n' || o.get() == '\r') {
                 currentLine++;
                 currentPos = 0;
                 return ret.toString();

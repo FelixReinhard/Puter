@@ -4,6 +4,7 @@ import org.assembler.lexer.*;
 import org.assembler.parser.instructions.*;
 import org.cpu.instructions.*;
 
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class Parser {
 
             switch (s.charAt(0)) {
                 case '#':
+                    // we have #main or #data or something
                     var stringBuilder = new StringBuilder(s);
                     stringBuilder.deleteCharAt(0);
                     return Optional.of(new SectionAssemblyInstruction(tk, stringBuilder.toString()));
@@ -75,6 +77,8 @@ public class Parser {
         // Same for loading as we can use things from the #data section.
         return switch (name) {
             case "li" -> li(tk);
+            case "dbg" -> dbg(tk);
+            case "la" -> saveLoadInstructions(tk, "la", LaInstruction.class);
             case "lw" -> saveLoadInstructions(tk, "lw", LwInstruction.class);
             case "lhw" -> saveLoadInstructions(tk, "lhw", LhwInstruction.class);
             case "lb" -> saveLoadInstructions(tk, "lb", LbInstruction.class);
@@ -106,6 +110,16 @@ public class Parser {
         };
     }
 
+    private Optional<AssemblyInstruction> dbg(Token tk) {
+        var register1 = get(TokenType.REGISTER);
+        if (register1.isEmpty()) {
+            reportError(tk, "dgb instructions must be followed by a register.");
+            return Optional.empty();
+        }
+
+        return Optional.of(new NormalInstruction(tk, new DbgInstruction(((RegisterToken) register1.get()).getRegister())));
+    }
+
     private Optional<AssemblyInstruction> jumping(Token tk, String name, Class<? extends JmpInstruction> instruction) {
         var token = next();
         if (token.isEmpty()) {
@@ -127,12 +141,19 @@ public class Parser {
             }
 
         } else if (token.get().getType() == TokenType.ADDRESS_LABEL) {
-            var label = ((LabelAddressToken)token.get()).getLabel();
-            var offset= ((LabelAddressToken)token.get()).getOffset();
+            // Maybe remove TODO
+            var label = ((LabelAddressToken) token.get()).getLabel();
+            var offset = ((LabelAddressToken) token.get()).getOffset();
 
-            return Optional.of(new JmpAssemblyInstruction(tk, name, label, offset));
+            return Optional.of(new JmpAssemblyInstruction(tk, instruction, label, offset));
+        }
+        else if (token.get().getType() == TokenType.LABEL) {
+            var label = ((LabelToken) token.get()).getLabelName();
+
+            return Optional.of(new JmpAssemblyInstruction(tk, instruction, label, 0));
+
         } else {
-            reportError(tk, String.format("%s instructions must be followed by an address."));
+            reportError(tk, String.format("%s instructions must be followed by an address.", name));
             return Optional.empty();
         }
     }
@@ -216,7 +237,7 @@ public class Parser {
             String label = ((LabelAddressToken)token.get()).getLabel();
             int offset = ((LabelAddressToken)token.get()).getOffset();
 
-            return Optional.of(new SaveLoadAssemblyInstruction(tk, name, destReg, label, offset));
+            return Optional.of(new SaveLoadAssemblyInstruction(tk, instructionClass, destReg, label, offset));
         } else {
             reportError(tk, String.format("%s must have a address.", name));
             return Optional.empty();
@@ -295,5 +316,13 @@ public class Parser {
         if (optional.isEmpty()) return Optional.empty();
         if (optional.get().getType() != type) return Optional.empty();
         return next();
+    }
+
+    public boolean isHasError() {
+        return hasError;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

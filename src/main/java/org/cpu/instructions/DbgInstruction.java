@@ -16,6 +16,6 @@ public class DbgInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x10 << 24) | (register << 20);
     }
 }

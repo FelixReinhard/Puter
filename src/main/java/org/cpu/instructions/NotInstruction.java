@@ -3,7 +3,7 @@ package org.cpu.instructions;
 import org.cpu.CPU;
 
 public class NotInstruction implements Instruction {
-    private byte register;
+    private final byte register;
 
     public NotInstruction(byte register) {
         this.register = register;
@@ -17,6 +17,6 @@ public class NotInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x61 << 24) | (register << 20);
     }
 }

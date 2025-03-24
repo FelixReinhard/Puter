@@ -12,6 +12,9 @@ import org.config.Config;
 public class Registers {
 
     public static final byte PC = 1;
+    public static final byte RA = 2;
+    public static final byte SP = 3;
+    public static final byte BP = 4;
     public static final byte HI = 15;
     public static final byte LO = 14;
     public static final byte CP = 13;
@@ -36,8 +39,8 @@ public class Registers {
         this.registers[PC] = address;
     }
 
-    public void incProgramCounter(int len) {
-        registers[PC]+= len;
+    public void incProgramCounter() {
+        registers[PC]++;
     }
 
     public void setRegister(byte register, int value) {

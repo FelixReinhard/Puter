@@ -25,6 +25,6 @@ public class SbInstruction implements Instruction {
 
     @Override
     public int getInstruction() {
-        return 0;
+        return (0x07 << 24) | (valueRegister << 20) | (addressRegister << 16) | (0xffff & offset);
     }
 }
