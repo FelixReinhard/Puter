@@ -1,7 +1,11 @@
 #data
-.values = {11, 22, 33, 44, 55}
+.values = {'a', 22, 33, 44, 55}
+.hello = "Hello World"
 
 #main
+lw $a [.hello]
+dbg $a
+
 li $d 10
 li $a 2
 sub $d $a

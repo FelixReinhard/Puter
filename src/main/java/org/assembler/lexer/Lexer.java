@@ -61,6 +61,9 @@ public class Lexer {
                 case '{':
                     addToken(currentLine, currentPos, literal());
                     break;
+                case '\"':
+                    addToken(currentLine, currentPos, stringLiteral());
+                    break;
                 default:
                     addToken(currentLine, currentPos, word(c));
                     break;
@@ -86,6 +89,40 @@ public class Lexer {
         }
     }
 
+    private LiteralToken stringLiteral() {
+        consumeSpaces();
+        Optional<Character> peeked = peek();
+        if (peeked.isEmpty()) {
+            reportError("Literal must be non empty.");
+            return null;
+        }
+
+        // Empty literal
+        if (peeked.get() == '"')
+            return new LiteralToken(new Integer[]{});
+
+        List<Integer> words = new ArrayList<>();
+
+        while (true) {
+            int nextNumber = next().get();
+            if (hasError) return null;
+            words.add(nextNumber);
+
+            Optional<Character> peeked2 = peek();
+            if (peeked2.isEmpty()) {
+                reportError("Literal must be closed.");
+                return null;
+            }
+
+            if (peeked2.get() == '"') {
+                next();
+                Integer[] w = new Integer[words.size()];
+                words.toArray(w);
+                return new LiteralToken(w);
+            }
+        }
+
+    }
     private LiteralToken literal() {
         consumeSpaces();
         Optional<Character> peeked = peek();
@@ -172,6 +209,12 @@ public class Lexer {
             // We have a digit.
             offset = parseNumber();
             consumeSpaces();
+        } else if (peeked.get() == '-') {
+            consume('-');
+            consumeSpaces();
+            // We have a digit.
+            offset = -parseNumber();
+            consumeSpaces();
         } else if (Character.isDigit(peeked.get()) && !hasRegister && !hasLabel) {
             // Only if both the first char is a digit and there was not register so
             // Something like this [0x001]
@@ -245,6 +288,30 @@ public class Lexer {
     }
 
     private int parseNumber() {
+        // Also possible to have a char like 'a'
+
+        var optional = peek();
+        if (optional.isEmpty()) {
+            reportError("A number should be parsed here.");
+            return 0;
+        }
+
+        if (optional.get() == '\'') {
+            // If we have a char literal
+            next();
+
+            var cOptional = next();
+            if (cOptional.isEmpty()) {
+                reportError("A char literal should not be empty.");
+                return 0;
+            }
+
+            char c = cOptional.get();
+            consume('\'');
+            return c;
+        }
+
+
         String s = getNumbers();
         if (s.length() < 3) {
             // Must be a normal number as

@@ -11,7 +11,8 @@ public class DbgInstruction implements Instruction {
 
     @Override
     public void execute(CPU cpu) {
-        System.out.println(cpu.getRegisters().getRegister(register));
+        int x = cpu.getRegisters().getRegister(register);
+        System.out.printf("%d (%c)%n", x, (char)x);
     }
 
     @Override
