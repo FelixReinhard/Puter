@@ -1,6 +1,5 @@
 package org.assembler.lexer;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,6 +37,10 @@ public class Lexer {
             switch (c) {
                 case ' ':
                     currentPos++;
+                    break;
+                case '/':
+                    consume('/');
+                    consumeLine();
                     break;
                 case '\n':
                 case '\r':
@@ -260,6 +263,8 @@ public class Lexer {
                 case "c" -> 7;
                 case "d" -> 8;
                 case "e" -> 9;
+                case "f" -> 10;
+                case "h" -> 11;
                 case "cp" -> 13;
                 case "lo" -> 14;
                 case "hi" -> 15;
@@ -425,7 +430,20 @@ public class Lexer {
         }
 
     }
-
+    private void consumeLine() {
+        while (true) {
+            Optional<Character> o = peek();
+            if (o.isEmpty()) {
+                reportError(String.format("Expected something, but nothing was found"));
+                return;
+            }
+            if (o.get() == '\r' || o.get() == '\n' || o.get() == '\t') {
+                next();
+                return;
+            }
+            next();
+        }
+    }
     private void consume(char c) {
         Optional<Character> o = peek();
         if (o.isEmpty()) {

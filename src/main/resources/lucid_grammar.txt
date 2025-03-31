@@ -1,0 +1,44 @@
+program := declaration*
+
+declaration := (importDeclaration | varDeclaration | classDeclaration | functionDeclaration)
+
+importDeclaration := ("from" name "import" name | "import" name) "\n"
+varDeclaration := "var" name (":" type)? ("=" expression)? "\n"
+classDeclaration := "class" name ("(" name ")")? "{" classBody "}" "\n"
+classBody := (varDeclaration | functionDeclaration)*
+
+functionDeclaration := "pub"? "fn" name "(" functionArguments ")" ("->" type)? "{" statement* "}"
+functionArguments := (functionArgument ("," functionArguments)? )?
+functionArgument := name ":" type
+
+type := ("[" type "]" | "*" type | "(" type ("," type)* ")" | name, "i32", "i16", "i8", "u32", "u16", "u8", "char", "bool", "str")
+
+statement := (expression | forStatement | foreachStatement | whileStatement | asmStatement | ifStatement | varDeclaration) "\n"
+forStatement := "for" "(" assignment? "," expression? "," expression? ")" "{" statement* "}"
+foreachStatement := "foreach" name (":" type)? "in" expression "{" statement* "}"
+whileStatement := "while" expression "{" statement* "}"
+asmStatement := "asm" '"'...'"'
+ifStatement := "if" expression "{" statement* "}" ("else" ifstatement)?
+
+expression := assignment
+assignment := primaryExpression assignmentOperator (assignment | structCreation)
+           |  logicOrExpression
+assignmentOperator := "=" | "*=" | "+=" | "-=" | "/="
+logicOrExpression  -> logicAndEpxression (("||" | "or") logicAndExpression))*
+logicAndExpression -> bitOrExpression (("&&" | "and") bitOrExpression))*
+bitOrExpression    -> bitAndExpression ("|" bitAndExpression)*
+bitAndExpression   -> equalityExpression ("&" equalityExpression)*
+equalityExpression -> compareExpression (("==" || "!=") compareExpression)*
+compareExpression  -> shiftExpression (("<=" | "<" | ">=" | ">") shiftExpression)*
+shiftExpression    -> termExpression ((">>" | "<<") termExpression)*
+termExpression     -> factorExpression (("+" | "-") factorExpression)*
+factorExpression   -> castExpression (("*" | "/" | "%") castExpression)*
+castExpression     -> unaryExpression ("as" type)?
+unaryExpression    -> ("!" | "-") unaryExpression | callExpression
+callExpression     -> primaryExpression ("++" | "--")
+                    | primaryExpression ("(" arguments? ")" | "[" expression "]")*
+primaryExpression  -> "(" expression ")"
+                    | literal
+
+
+statement := () "\n"

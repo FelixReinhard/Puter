@@ -1,7 +1,7 @@
 import org.assembler.Assembler;
 import org.config.Config;
 import org.cpu.CPU;
-import org.cpu.instructions.JmpInstruction;
+import org.cpu.instructions.DbgInstruction;
 import org.cpu.instructions.helper.InstructionsHelper;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,23 +10,28 @@ import org.memory.MainMemory;
 
 public class AssemblerTest {
 
-    private CPU flashWith(int startingAddress, Integer[] values) {
+    private CPU flashWith(Integer[] values) {
         MainMemory memory = new MainMemory(2);
-        memory.setRangeAt(values, new Address(startingAddress));
+        memory.setRangeAt(values, new Address(Config.START_PC_ADDRESS));
         return new CPU(memory);
+    }
+
+    private CPU flashWith(String input) {
+        var assembler = new Assembler();
+        var res = assembler.assemble(input);
+
+        return flashWith(res.toArray(new Integer[0]));
     }
 
     @Test
     public void testAssemlberSimple() {
-        var assembler = new Assembler();
-        var res = assembler.assemble("#main jmp #fn add $3 $5 #fn li $7 99 dbg $7");
-
-        var i = InstructionsHelper.from(res.get(1));
-        var i2 = InstructionsHelper.from(res.get(3));
-
-        var cpu = flashWith(Config.START_PC_ADDRESS, res.toArray(new Integer[0]));
+        var cpu = flashWith("#main li $a 99 dbg $a");
         cpu.run();
 
+        Assert.assertEquals(99, (int)DbgInstruction.outputs.pop());
+    }
 
+    @Test
+    public void testAssemlberSimple2() {
     }
 }

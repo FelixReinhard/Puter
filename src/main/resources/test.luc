@@ -1,0 +1,56 @@
+import file // file.luc must exist
+from file import function
+
+var x: i32 = 42
+var ptr_x: *i32 = &x
+var array: [i32] = [1, 2, 3, 4, 5, 6]
+x = array[42]
+// i32, i16, i8, u32, u16, u8, char(u32), bool(u8), str(*[char])
+
+var array_ptr: *[i32] = &array;
+
+pub class CS {
+    var field: str = "Hello"
+
+    fn f(y: i32) -> (i32, i32) {
+        return (42, 42)
+    }
+
+    fn g() -> *Other {
+    }
+}
+
+pub class Other(CS) {
+    Other() {
+        this // this: *Other
+    }
+}
+
+pub fn g() {}
+
+var c: Cs = Cs()
+// Rules for pointers:
+// - not assigned so
+//  var x = null;
+// x = &y; // not valid
+// Still possible but better. warning for returning pointer.
+fn main() {
+
+    for (i = 0, i < 20, i+= 1) {}
+    foreach x: i32 in array {}
+    foreach x: i32 in *array {}
+    while x > 0 {}
+
+    var x: i32 = 400;
+
+    asm "
+        lw $a var(x) // -> lw $a [$sp + ...]
+        add $a $b
+    "
+
+    c.f(42)
+    var text = "Hello World\n"
+    syscall(4, &text); // register: u32, arguments.
+
+
+}

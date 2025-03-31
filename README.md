@@ -1,4 +1,9 @@
 # Puter
+
+## OS - Syscalls
+Set `$a` to number, and args in `$e` to `h` 
+- ``
+
 ## Registers - 16
 - `0x00`: Always zero
 - `0x01`: Program Counter `$pc`
@@ -10,7 +15,9 @@
 - `0x07`: `$c` Third general purpose register
 - `0x08`: `$d` Forth general purpose register
 - `0x09`: `$e` Fifth general purpose register
-- 
+- `0x0a`: `$f` Fifth general purpose register
+- `0x0b`: `$g` Fifth general purpose register
+- `0x0c`: `$h` Fifth general purpose register
 - `0x0d`: Jump Flag (`$CP`) used when using compare `e1` and `e2`:
   - `0`: EQ (`e1 = e2`)
   - `1`: GREATER (`e1 > e2`)

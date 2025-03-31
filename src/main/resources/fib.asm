@@ -4,7 +4,7 @@
 
 #main
 lw $a [.hello]
-dbg $a
+dbg $a //test
 
 li $d 10
 li $a 2
